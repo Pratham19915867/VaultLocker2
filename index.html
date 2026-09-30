@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NoteDealer — Vault Notes</title>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+
+<body>
+  <div class="bg">
+    <div class="blob b1"></div>
+    <div class="blob b2"></div>
+    <div class="blob b3"></div>
+    <div class="grain"></div>
+  </div>
+
+  <header class="topbar glass">
+    <div class="brand">
+      <div class="logoMark">ND</div>
+      <div>
+        <div class="brandName">NoteDealer</div>
+        <div class="brandTag">Vault lockers for notes & planning</div>
+      </div>
+    </div>
+
+    <div class="topActions">
+      <button id="btnExport" class="btn ghost" title="Export current locker" disabled>Export</button>
+      <label class="btn ghost fileBtn" title="Import locker file">
+        Import
+        <input id="fileImport" type="file" accept="application/json"/>
+      </label>
+      <button id="btnLock" class="btn" disabled>Lock</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- LOCK VIEW -->
+    <section id="viewLock" class="panel glass">
+      <div class="panelHeader">
+        <h1>Vault Locker</h1>
+        <p class="muted">Enter the locker code to unlock. Creating a locker is only allowed for first-time setup.</p>
+      </div>
+
+      <div class="lockerRow">
+        <div class="lockerLeft">
+          <div class="modeTabs">
+            <button id="tabUnlock" class="tab active">Unlock</button>
+            <button id="tabCreate" class="tab">Create Locker</button>
+          </div>
+
+          <div id="createFields" class="createFields hidden">
+            <label class="field">
+              <span>Locker name</span>
+              <input id="lockerName" type="text" maxlength="32" placeholder="e.g., Project Alpha" />
+            </label>
+          </div>
+
+          <div class="pinArea" id="pinArea">
+            <!-- hidden input to enable fast typing + mobile keypad + paste -->
+            <input id="pinInput" class="pinInput" type="tel" inputmode="numeric"
+                   autocomplete="one-time-code" pattern="[0-9]*" aria-label="Locker code"/>
+
+            <!-- PIN boxes are created by JS (based on PIN_LEN) -->
+            <div id="pinBoxes" class="pinBoxes" aria-label="code boxes"></div>
+
+            <div class="pinHintRow">
+              <div id="pinHint" class="muted">Type code, paste, or use keypad</div>
+              <button id="btnClear" class="btn tiny ghost">Clear</button>
+            </div>
+
+            <div id="lockError" class="error hidden"></div>
+          </div>
+        </div>
+
+        <div class="lockerRight">
+          <div class="glass innerCard">
+            <div class="innerCardTop">
+              <h3>Lockers on this device</h3>
+              <div class="muted small">Encrypted in your browser storage</div>
+            </div>
+            <div id="lockerList" class="lockerList"></div>
+            <div class="muted small tip">
+              Tip: Export your locker and send the file to your friend. They can Import it and unlock using the same code.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="keypad glass innerKeypad">
+        <button class="key" data-key="1">1</button>
+        <button class="key" data-key="2">2</button>
+        <button class="key" data-key="3">3</button>
+        <button class="key" data-key="4">4</button>
+        <button class="key" data-key="5">5</button>
+        <button class="key" data-key="6">6</button>
+        <button class="key" data-key="7">7</button>
+        <button class="key" data-key="8">8</button>
+        <button class="key" data-key="9">9</button>
+        <button class="key ghost" data-action="back">⌫</button>
+        <button class="key" data-key="0">0</button>
+        <button id="btnGo" class="key go">Go</button>
+      </div>
+
+      <div class="foot muted small">
+        If Create/Unlock fails, run on <b>localhost/https</b> (VS Code Live Server). Web Crypto may not work on some file:// setups.
+      </div>
+    </section>
+
+    <!-- VAULT VIEW -->
+    <section id="viewVault" class="panel glass hidden">
+      <div class="vaultHeader">
+        <div>
+          <h1 id="vaultTitle">Locker</h1>
+          <div id="vaultMeta" class="muted small"></div>
+        </div>
+
+        <div class="vaultActions">
+          <button id="btnNewNote" class="btn">New Note</button>
+          <button id="btnSwitchLocker" class="btn ghost">Switch Locker</button>
+        </div>
+      </div>
+
+      <div class="vaultGrid">
+        <aside class="glass side">
+          <h3>Notes</h3>
+          <div class="muted small">Click a note to edit</div>
+          <div class="searchRow">
+            <input id="search" class="search" placeholder="Search notes..." />
+          </div>
+          <div id="noteList" class="noteList"></div>
+        </aside>
+
+        <section class="glass editor">
+          <div class="editorHead">
+            <div>
+              <div class="muted small">Editor</div>
+              <div id="editStatus" class="muted small">No note selected</div>
+            </div>
+            <div class="editorBtns">
+              <button id="btnDelete" class="btn danger ghost" disabled>Delete</button>
+              <button id="btnSave" class="btn" disabled>Save</button>
+            </div>
+          </div>
+
+          <label class="field">
+            <span>Title</span>
+            <input id="noteTitle" type="text" maxlength="80" placeholder="Title..." disabled />
+          </label>
+
+          <label class="field">
+            <span>Body</span>
+            <textarea id="noteBody" rows="12" placeholder="Write your plan, checklist, notes..." disabled></textarea>
+          </label>
+
+          <div class="muted small">
+            Stored encrypted locally. Use Export for sharing/backups.
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <!-- Theme chooser -->
+  <div class="themeFab">
+    <button id="btnTheme" class="fab glass" title="Themes">Theme</button>
+    <div id="themePanel" class="themePanel glass hidden">
+      <div class="themeHead">
+        <div>
+          <div class="themeTitle">Themes</div>
+          <div class="muted small">Liquid glass styles</div>
+        </div>
+        <button id="btnThemeClose" class="btn tiny ghost">Close</button>
+      </div>
+      <div id="themeList" class="themeList"></div>
+    </div>
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
