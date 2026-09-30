@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NoteDealer — Cloud Vault</title>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+
+<body>
+  <div class="bg">
+    <div class="blob b1"></div>
+    <div class="blob b2"></div>
+    <div class="blob b3"></div>
+    <div class="grain"></div>
+  </div>
+
+  <header class="topbar glass">
+    <div class="brand">
+      <div class="logoMark">ND</div>
+      <div>
+        <div class="brandName">NoteDealer</div>
+        <div class="brandTag">Cloud vault (open from any device using PIN)</div>
+      </div>
+    </div>
+    <div class="topActions">
+      <button id="btnLock" class="btn" disabled>Lock</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section id="viewLock" class="panel glass">
+      <div class="panelHeader">
+        <h1>Enter Locker PIN</h1>
+        <p class="muted">Same PIN → same vault on all devices.</p>
+      </div>
+
+      <div class="pinArea" id="pinArea">
+        <input id="pinInput" class="pinInput" type="tel" inputmode="numeric" autocomplete="one-time-code" />
+        <div id="pinBoxes" class="pinBoxes"></div>
+
+        <div class="pinHintRow">
+          <div id="pinHint" class="muted">Type / paste PIN or use keypad</div>
+          <button id="btnClear" class="btn tiny ghost">Clear</button>
+        </div>
+
+        <div id="lockError" class="error hidden"></div>
+      </div>
+
+      <div class="keypad glass innerKeypad">
+        <button class="key" data-key="1">1</button>
+        <button class="key" data-key="2">2</button>
+        <button class="key" data-key="3">3</button>
+        <button class="key" data-key="4">4</button>
+        <button class="key" data-key="5">5</button>
+        <button class="key" data-key="6">6</button>
+        <button class="key" data-key="7">7</button>
+        <button class="key" data-key="8">8</button>
+        <button class="key" data-key="9">9</button>
+        <button class="key ghost" data-action="back">⌫</button>
+        <button class="key" data-key="0">0</button>
+        <button id="btnGo" class="key go">Go</button>
+      </div>
+    </section>
+
+    <section id="viewVault" class="panel glass hidden">
+      <div class="vaultHeader">
+        <div>
+          <h1 id="vaultTitle">Vault</h1>
+          <div id="vaultMeta" class="muted small"></div>
+        </div>
+        <div class="vaultActions">
+          <button id="btnNewNote" class="btn">New Note</button>
+          <button id="btnSwitchLocker" class="btn ghost">Back</button>
+        </div>
+      </div>
+
+      <div class="vaultGrid">
+        <aside class="glass side">
+          <h3>Notes</h3>
+          <div class="searchRow">
+            <input id="search" class="search" placeholder="Search notes..." />
+          </div>
+          <div id="noteList" class="noteList"></div>
+        </aside>
+
+        <section class="glass editor">
+          <div class="editorHead">
+            <div>
+              <div class="muted small">Editor</div>
+              <div id="editStatus" class="muted small">No note selected</div>
+            </div>
+            <div class="editorBtns">
+              <button id="btnDelete" class="btn danger ghost" disabled>Delete</button>
+              <button id="btnSave" class="btn" disabled>Save</button>
+            </div>
+          </div>
+
+          <label class="field">
+            <span>Title</span>
+            <input id="noteTitle" type="text" maxlength="80" disabled />
+          </label>
+
+          <label class="field">
+            <span>Body</span>
+            <textarea id="noteBody" rows="12" disabled></textarea>
+          </label>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
