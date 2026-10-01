@@ -7,10 +7,10 @@
     "start": "node server.js"
   },
   "engines": {
-    "node": "18.x"
+    "node": "20.x"
   },
   "dependencies": {
-    "better-sqlite3": "^11.1.0",
+    "@supabase/supabase-js": "^2.45.4",
     "compression": "^1.7.4",
     "express": "^4.19.2"
   }
