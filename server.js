@@ -20,7 +20,7 @@ if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
 }
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
-  auth: { persistSession: false, autoRefreshToken: false },
+  auth: { persistSession: false, autoRefreshToken: false }
 });
 
 function validId(id) {
@@ -35,7 +35,7 @@ function limit(req, res, next) {
   const key = req.ip || "unknown";
   const n = (hits.get(key) || 0) + 1;
   hits.set(key, n);
-  if (n > 180) return res.status(429).json({ error: "Too many requests" });
+  if (n > 200) return res.status(429).json({ error: "Too many requests" });
   next();
 }
 
@@ -87,12 +87,13 @@ app.put("/api/vault/:id", limit, async (req, res) => {
   res.json({ ok: true, updatedAt });
 });
 
-// Delete vault (used for Change PIN rotation)
+// Delete vault (used by Change PIN flow)
 app.delete("/api/vault/:id", limit, async (req, res) => {
   const { id } = req.params;
   if (!validId(id)) return res.status(400).json({ error: "Bad id" });
 
   const { error } = await supabase.from("vaults").delete().eq("id", id);
+
   if (error) {
     console.error("Supabase DELETE error:", error);
     return res.status(500).json({ error: "Database error" });
@@ -101,14 +102,13 @@ app.delete("/api/vault/:id", limit, async (req, res) => {
   res.json({ ok: true });
 });
 
-// Admin stats
+// Admin stats: vault count
 app.get("/api/admin/stats", limit, async (req, res) => {
   if (!ADMIN_KEY) return res.status(500).json({ error: "Admin not configured" });
 
   const auth = req.headers.authorization || "";
   if (auth !== `Bearer ${ADMIN_KEY}`) return res.status(401).json({ error: "Unauthorized" });
 
-  // Count vault rows
   const { count, error } = await supabase
     .from("vaults")
     .select("id", { count: "exact", head: true });
@@ -121,7 +121,7 @@ app.get("/api/admin/stats", limit, async (req, res) => {
   res.setHeader("Cache-Control", "no-store");
   res.json({
     vaultCount: count ?? 0,
-    serverTime: new Date().toISOString(),
+    serverTime: new Date().toISOString()
   });
 });
 
