@@ -9,7 +9,6 @@
 </head>
 
 <body>
-  <!-- Background -->
   <div class="bg">
     <div class="blob b1"></div>
     <div class="blob b2"></div>
@@ -18,7 +17,7 @@
   </div>
 
   <header class="topbar glass">
-    <div class="brand" id="brandHome" title="NoteDealer">
+    <div class="brand" id="brandHome" title="Home">
       <div class="logoMark">ND</div>
       <div>
         <div class="brandName">NoteDealer</div>
@@ -37,21 +36,12 @@
     <section id="viewLock" class="panel glass">
       <div class="panelHeader">
         <h1>Vault Locker</h1>
-        <p class="muted">
-          PIN enter karo. Same PIN = same vault (PC/Phone anywhere).
-        </p>
+        <p class="muted">PIN enter karo. Same PIN = same vault (PC/Phone anywhere).</p>
       </div>
 
       <div class="pinArea" id="pinArea">
-        <!-- Keep input for accessibility, but mobile keyboard will be disabled by JS -->
-        <input
-          id="pinInput"
-          class="pinInput"
-          type="text"
-          inputmode="none"
-          autocomplete="off"
-          aria-label="Locker PIN"
-        />
+        <!-- Keep input for accessibility but we disable mobile keyboard in JS -->
+        <input id="pinInput" class="pinInput" type="text" inputmode="none" autocomplete="off" aria-label="Locker PIN"/>
 
         <div id="pinBoxes" class="pinBoxes" aria-label="PIN boxes"></div>
 
@@ -100,8 +90,8 @@
 
       <div class="vaultGrid">
         <aside class="glass side">
-          <h3>Notes</h3>
-          <div class="muted small">Click a note to edit</div>
+          <h3 class="notesHead">Notes <span id="noteCount" class="countBadge">0</span></h3>
+          <div class="muted small">👇 Saved notes yahan hain. Tap karke kholo.</div>
 
           <div class="searchRow">
             <input id="search" class="search" placeholder="Search notes..." />
@@ -133,9 +123,7 @@
             <textarea id="noteBody" rows="12" placeholder="Write your notes / planning..." disabled></textarea>
           </label>
 
-          <div class="muted small">
-            Notes are encrypted in your browser before saving to cloud.
-          </div>
+          <div class="muted small">Notes are encrypted in your browser before saving to cloud.</div>
         </section>
       </div>
     </section>
@@ -168,7 +156,6 @@
   <!-- Theme chooser -->
   <div class="themeFab">
     <button id="btnTheme" class="fab glass" title="Themes">Theme</button>
-
     <div id="themePanel" class="themePanel glass hidden">
       <div class="themeHead">
         <div>
@@ -177,7 +164,6 @@
         </div>
         <button id="btnThemeClose" class="btn tiny ghost">Close</button>
       </div>
-
       <div id="themeList" class="themeList"></div>
     </div>
   </div>
